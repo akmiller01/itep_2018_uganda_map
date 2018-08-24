@@ -26,14 +26,17 @@ leaflet(data=ug) %>%
                       ,stroke=F
                       ,smoothFactor=0.2
                       ,popup=paste0(
-                        "<b>",ug@data$name,"</b> <br/>",
+                        "<b>District name: ",ug@data$name,"<br/>",
                         "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(ug@data$fdi),"<br/>",
                         "<b>Percent: </b>",round(ug@data[,"percent"],2)
                       )) %>%
-  addMarkers(
+  addCircleMarkers(
     data=cities
+    ,stroke=F
+    ,radius=2.5
+    ,fillOpacity=.8
     ,popup=paste0(
-      "<b>",cities@data$city,"</b> <br/>",
+      "<b>City name: </b>",cities@data$city,"<br/>",
       "<b>District: </b>",cities@data$district,"<br/>",
       "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(cities@data$fdi),"<br/>"
     )
