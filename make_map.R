@@ -15,11 +15,18 @@ coordinates(cities)=~long+lat
 
 pal <- colorBin(
   palette = "YlOrRd",
-  domain = ug@data[,"percent"]
+  domain = ug@data[,"percent"],
+  na.color="#d0cccf",
+  bins = c(0,5,20,40)
 )
 
+centroids = getSpPPolygonsLabptSlots(ug)
+label.df = data.frame(long=centroids[,1],lat=centroids[,2],label=ug@data$name,percent=ug@data$percent)
+label.df = subset(label.df,percent>0)
+coordinates(label.df)=~long+lat
+
 leaflet(data=ug) %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
+  addTiles("http://178.79.185.236:8080/styles/ugandageojson/rendered/{z}/{x}/{y}.png") %>%
   setView(33, 1, zoom=6) %>% 
   addPolygons(color = pal(ug@data[,"percent"])
                       ,fillOpacity = 1
@@ -30,15 +37,42 @@ leaflet(data=ug) %>%
                         "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(ug@data$fdi),"<br/>",
                         "<b>Percent: </b>",round(ug@data[,"percent"],2)
                       )) %>%
-  addCircleMarkers(
-    data=cities
-    ,stroke=F
-    ,radius=2.5
-    ,fillOpacity=.8
-    ,popup=paste0(
-      "<b>City name: </b>",cities@data$city,"<br/>",
-      "<b>District: </b>",cities@data$district,"<br/>",
-      "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(cities@data$fdi),"<br/>"
+  addPolylines(
+    color="#eeeeee",
+    weight=0.5,
+    opacity=1,
+    smoothFactor=0.2
+  ) %>%
+  addLabelOnlyMarkers(
+    data=label.df,
+    label=~label,
+    labelOptions = labelOptions(
+      noHide=T,
+      textOnly=T,
+      direction="right",
+      style= list(
+        "font-family"="serif"
+        ,"text-shadow"="-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white"
+      )
     )
-    ) %>%
-addLegend("bottomright", pal=pal, values = ug@data[,"percent"], opacity = 1, title="Total FDI, 2012-2016",labFormat = labelFormat(suffix="%"))
+  ) %>%
+  # addCircleMarkers(
+  #   data=cities
+  #   ,stroke=F
+  #   ,radius=2.5
+  #   ,fillOpacity=.8
+  #   ,popup=paste0(
+  #     "<b>City name: </b>",cities@data$city,"<br/>",
+  #     "<b>District: </b>",cities@data$district,"<br/>",
+  #     "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(cities@data$fdi),"<br/>"
+  #   )
+  #   ) %>%
+addLegend(
+  "bottomright"
+  , pal=pal
+  , values = ug@data[,"percent"]
+  , opacity = 1
+  , title="Percent of total FDI capital  <br> investments: 2012-2016"
+  ,labFormat = labelFormat(suffix="%")
+  ,na.label = "0/no data"
+  )
