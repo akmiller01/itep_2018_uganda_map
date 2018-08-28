@@ -33,7 +33,7 @@ leaflet(data=ug) %>%
                       ,stroke=F
                       ,smoothFactor=0.2
                       ,popup=paste0(
-                        "<b>District name: ",ug@data$name,"<br/>",
+                        "<b>District name</b>: ",ug@data$name,"<br/>",
                         "<b>Total FDI, 2012-2016 (US$ millions): </b>$",round(ug@data$fdi),"<br/>",
                         "<b>Percent: </b>",round(ug@data[,"percent"],2)
                       )) %>%
