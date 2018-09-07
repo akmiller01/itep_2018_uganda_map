@@ -47,12 +47,6 @@ ug.f = ug.f[order(ug.f$order),]
 
 palbins = c(30,50,70,90,97)
 names(palbins)=c("<30 %","30-50","50-70","70-90",">90 %")
-pal <- colorBin(
-  palette = reds,
-  domain = pov$pov,
-  na.color="#d0cccf",
-  bins = palbins
-)
 
 pov_map = 
   ggplot(ug.f)+
@@ -62,7 +56,7 @@ pov_map =
     na.value="#d0cccf",
     guide="legend",
     breaks=palbins,
-    colors=pal(palbins),
+    colors=reds,
     values=rescale(palbins)
   ) +
   scale_color_identity()+
@@ -77,13 +71,6 @@ ggsave(paste0("eps/pov.eps"),pov_map,device="eps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,17)
 names(palbins) = c("<1 %","1-2","2-3","3-4","4-10",">10 %")
-pal <- colorBin(
-  palette = purples,
-  domain = local$local,
-  na.color="#d0cccf",
-  bins = palbins
-)
-
 
 local_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=local,color="#eeeeee",size=0.21))+
@@ -92,7 +79,7 @@ local_map = ggplot(ug.f)+
     na.value="#d0cccf",
     guide="legend",
     breaks=palbins,
-    colors=pal(palbins),
+    colors=purples,
     values=rescale(palbins)
   ) +
   scale_color_identity()+
@@ -107,13 +94,6 @@ ggsave(paste0("eps/local.eps"),local_map,device="eps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,30)
 names(palbins) = c("<1 %","1-2","2-3","3-4","4-10",">10 %")
-pal <- colorBin(
-  palette = purples,
-  domain = donor$donor,
-  na.color="#d0cccf",
-  bins = palbins
-)
-
 
 donor_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=donor,color="#eeeeee",size=0.21))+
@@ -122,7 +102,7 @@ donor_map = ggplot(ug.f)+
     na.value="#d0cccf",
     guide="legend",
     breaks=palbins,
-    colors=pal(palbins),
+    colors=purples,
     values=rescale(palbins)
   ) +
   scale_color_identity()+
