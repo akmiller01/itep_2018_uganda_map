@@ -8,6 +8,7 @@ setwd("~/git/itep_2018_uganda_map")
 
 reds = c("#FBD7CB","#F6B2A7","#F28E83","#ED695E","#E8443A")
 purples = c("#DEB5D6","#CD9DC8","#BC86BA","#AB6EAC","#9A579E","#893F90")
+fdi_pal = c("#f8c1b2", "#e84439", "#a21e25")
 
 ug = readOGR("shp/uganda.shp")
 dist.dat = read.csv("data/districts.csv")
@@ -117,13 +118,6 @@ ggsave(paste0("eps/donor.eps"),donor_map,device="eps",width=10,height=6)
 
 palbins = c(5,20,36)
 names(palbins) = c("<5 %","5-20",">20 %")
-pal <- colorBin(
-  palette = "YlOrRd",
-  domain = dist.dat$fdi,
-  na.color="#d0cccf",
-  bins = palbins
-)
-
 
 fdi_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=fdi,color="#eeeeee",size=0.21))+
@@ -132,7 +126,7 @@ fdi_map = ggplot(ug.f)+
     na.value="#d0cccf",
     guide="legend",
     breaks=palbins,
-    colors=pal(palbins),
+    colors=fdi_pal,
     values=rescale(palbins)
   ) +
   scale_color_identity()+
