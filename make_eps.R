@@ -1,4 +1,7 @@
-list.of.packages <- c("sp","rgdal","leaflet","data.table","ggplot2","scales")
+# if( !require( devtools ) ) install.packages("devtools")
+# devtools::install_github('davidgohel/gdtools')
+
+list.of.packages <- c("sp","rgdal","leaflet","data.table","ggplot2","scales","svglite")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=T)
@@ -69,6 +72,8 @@ pov_map =
   labs(x="",y="")
 ggsave(paste0("eps/pov.png"),pov_map,device="png",width=10,height=6)
 ggsave(paste0("eps/pov.eps"),pov_map,device="eps",width=10,height=6)
+ggsave(paste0("eps/pov.svg"),pov_map,device="svg",width=10,height=6)
+ggsave(paste0("eps/pov.ps"),pov_map,device="ps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,17)
 names(palbins) = c("<1 %",">1-2",">2-3",">3-4",">4-10",">10 %")
@@ -92,6 +97,8 @@ local_map = ggplot(ug.f)+
   labs(x="",y="")
 ggsave(paste0("eps/local.png"),local_map,device="png",width=10,height=6)
 ggsave(paste0("eps/local.eps"),local_map,device="eps",width=10,height=6)
+ggsave(paste0("eps/local.svg"),local_map,device="svg",width=10,height=6)
+ggsave(paste0("eps/local.ps"),local_map,device="ps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,30)
 names(palbins) = c("<1 %",">1-2",">2-3",">3-4",">4-10",">10 %")
@@ -115,6 +122,8 @@ donor_map = ggplot(ug.f)+
   labs(x="",y="")
 ggsave(paste0("eps/donor.png"),donor_map,device="png",width=10,height=6)
 ggsave(paste0("eps/donor.eps"),donor_map,device="eps",width=10,height=6)
+ggsave(paste0("eps/donor.svg"),donor_map,device="svg",width=10,height=6)
+ggsave(paste0("eps/donor.ps"),donor_map,device="ps",width=10,height=6)
 
 palbins = c(5,20,36)
 names(palbins) = c("<5 %",">5-20",">20 %")
@@ -138,3 +147,5 @@ fdi_map = ggplot(ug.f)+
   labs(x="",y="")
 ggsave(paste0("eps/fdi.png"),fdi_map,device="png",width=10,height=6)
 ggsave(paste0("eps/fdi.eps"),fdi_map,device="eps",width=10,height=6)
+ggsave(paste0("eps/fdi.svg"),fdi_map,device="svg",width=10,height=6)
+ggsave(paste0("eps/fdi.ps"),fdi_map,device="ps",width=10,height=6)
