@@ -19,24 +19,24 @@ dist.dat$fdi = NULL
 setnames(dist.dat,"percent","fdi")
 dist.dat$fdi = dist.dat$fdi*100
 
-districts = ddw("spotlight_on_uganda.ref_uganda_district")
+districts = dbReadTable(con, c("spotlight_on_uganda","ref_uganda_district"))
 districts$name[which(districts$name=="Sembabule")] = "Ssembabule"
 setnames(districts,"id","district_id")
 keep = c("name","value")
-pov = ddw("spotlight_on_uganda.uganda_poverty_headcount")
+pov = dbReadTable(con, c("spotlight_on_uganda","uganda_poverty_headcount"))
 pov = merge(pov,districts,by="district_id",all.x=T)
 pov = pov[keep]
 setnames(pov,"value","pov")
 
-local = ddw("spotlight_on_uganda.uganda_local_percent")
+local = dbReadTable(con, c("spotlight_on_uganda","uganda_local_percent"))
 local = merge(local,districts,by="district_id",all.x=T)
-local = subset(local,year==2016 & budget_type=="actual")
+local = subset(local,year==2016 & budget_type=="budget")
 local = local[keep]
 setnames(local,"value","local")
 
-donor = ddw("spotlight_on_uganda.uganda_donor_percent")
+donor = dbReadTable(con, c("spotlight_on_uganda","uganda_donor_percent"))
 donor = merge(donor,districts,by="district_id",all.x=T)
-donor = subset(donor,year==2016 & budget_type=="actual")
+donor = subset(donor,year==2016 & budget_type=="budget")
 donor = donor[keep]
 setnames(donor,"value","donor")
 
