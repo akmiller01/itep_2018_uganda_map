@@ -19,24 +19,24 @@ dist.dat$fdi = NULL
 setnames(dist.dat,"percent","fdi")
 dist.dat$fdi = dist.dat$fdi*100
 
-districts = ddw("spotlight_on_uganda.ref_uganda_district")
+districts = dbReadTable(con, c("spotlight_on_uganda","ref_uganda_district"))
 districts$name[which(districts$name=="Sembabule")] = "Ssembabule"
 setnames(districts,"id","district_id")
 keep = c("name","value")
-pov = ddw("spotlight_on_uganda.uganda_poverty_headcount")
+pov = dbReadTable(con, c("spotlight_on_uganda","uganda_poverty_headcount"))
 pov = merge(pov,districts,by="district_id",all.x=T)
 pov = pov[keep]
 setnames(pov,"value","pov")
 
-local = ddw("spotlight_on_uganda.uganda_local_percent")
+local = dbReadTable(con, c("spotlight_on_uganda","uganda_local_percent"))
 local = merge(local,districts,by="district_id",all.x=T)
-local = subset(local,year==2016 & budget_type=="actual")
+local = subset(local,year==2016 & budget_type=="budget")
 local = local[keep]
 setnames(local,"value","local")
 
-donor = ddw("spotlight_on_uganda.uganda_donor_percent")
+donor = dbReadTable(con, c("spotlight_on_uganda","uganda_donor_percent"))
 donor = merge(donor,districts,by="district_id",all.x=T)
-donor = subset(donor,year==2016 & budget_type=="actual")
+donor = subset(donor,year==2016 & budget_type=="budget")
 donor = donor[keep]
 setnames(donor,"value","donor")
 
@@ -50,7 +50,7 @@ ug.f = merge(ug.f,donor,by="name",all.x=T)
 ug.f = ug.f[order(ug.f$order),]
 
 palbins = c(30,50,70,90,97)
-names(palbins)=c("<30 %",">30-50",">50-70",">70-90",">90 %")
+names(palbins)=c("30 %","50 %","70 %","90 %","")
 
 pov_map = 
   ggplot(ug.f)+
@@ -58,7 +58,6 @@ pov_map =
   coord_fixed(1) +
   scale_fill_gradientn(
     na.value="#d0cccf",
-    guide="legend",
     breaks=palbins,
     colors=reds,
     values=rescale(palbins)
@@ -68,7 +67,7 @@ pov_map =
   expand_limits(x=ug.f$long,y=ug.f$lat)+
   theme_classic()+
   theme(axis.line = element_blank(),axis.text=element_blank(),axis.ticks = element_blank())+
-  guides(fill=guide_legend(title=""))+
+  guides(fill=guide_colourbar(title="",ticks=F))+
   labs(x="",y="")
 ggsave(paste0("eps/pov.png"),pov_map,device="png",width=10,height=6)
 ggsave(paste0("eps/pov.eps"),pov_map,device="eps",width=10,height=6)
@@ -76,14 +75,13 @@ ggsave(paste0("eps/pov.svg"),pov_map,device="svg",width=10,height=6)
 ggsave(paste0("eps/pov.ps"),pov_map,device="ps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,17)
-names(palbins) = c("<1 %",">1-2",">2-3",">3-4",">4-10",">10 %")
+names(palbins) = c("","","3 %","","10 %","17 %")
 
 local_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=local,color="#eeeeee",size=0.21))+
   coord_fixed(1) +
   scale_fill_gradientn(
     na.value="#d0cccf",
-    guide="legend",
     breaks=palbins,
     colors=purples,
     values=rescale(palbins)
@@ -93,7 +91,7 @@ local_map = ggplot(ug.f)+
   expand_limits(x=ug.f$long,y=ug.f$lat)+
   theme_classic()+
   theme(axis.line = element_blank(),axis.text=element_blank(),axis.ticks = element_blank())+
-  guides(fill=guide_legend(title=""))+
+  guides(fill=guide_colourbar(title="",ticks=F))+
   labs(x="",y="")
 ggsave(paste0("eps/local.png"),local_map,device="png",width=10,height=6)
 ggsave(paste0("eps/local.eps"),local_map,device="eps",width=10,height=6)
@@ -101,7 +99,7 @@ ggsave(paste0("eps/local.svg"),local_map,device="svg",width=10,height=6)
 ggsave(paste0("eps/local.ps"),local_map,device="ps",width=10,height=6)
 
 palbins = c(1,2,3,4,10,30)
-names(palbins) = c("<1 %",">1-2",">2-3",">3-4",">4-10",">10 %")
+names(palbins) = c("1 %","","","","10 %","30 %")
 
 donor_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=donor,color="#eeeeee",size=0.21))+
@@ -118,7 +116,7 @@ donor_map = ggplot(ug.f)+
   expand_limits(x=ug.f$long,y=ug.f$lat)+
   theme_classic()+
   theme(axis.line = element_blank(),axis.text=element_blank(),axis.ticks = element_blank())+
-  guides(fill=guide_legend(title=""))+
+  guides(fill=guide_colourbar(title="",ticks=F))+
   labs(x="",y="")
 ggsave(paste0("eps/donor.png"),donor_map,device="png",width=10,height=6)
 ggsave(paste0("eps/donor.eps"),donor_map,device="eps",width=10,height=6)
@@ -126,7 +124,7 @@ ggsave(paste0("eps/donor.svg"),donor_map,device="svg",width=10,height=6)
 ggsave(paste0("eps/donor.ps"),donor_map,device="ps",width=10,height=6)
 
 palbins = c(5,20,36)
-names(palbins) = c("<5 %",">5-20",">20 %")
+names(palbins) = c("5 %","20 %","36 %")
 
 fdi_map = ggplot(ug.f)+
   geom_polygon( aes(x=long,y=lat,group=group,fill=fdi,color="#eeeeee",size=0.21))+
@@ -143,7 +141,7 @@ fdi_map = ggplot(ug.f)+
   expand_limits(x=ug.f$long,y=ug.f$lat)+
   theme_classic()+
   theme(axis.line = element_blank(),axis.text=element_blank(),axis.ticks = element_blank())+
-  guides(fill=guide_legend(title=""))+
+  guides(fill=guide_colourbar(title="",ticks=F))+
   labs(x="",y="")
 ggsave(paste0("eps/fdi.png"),fdi_map,device="png",width=10,height=6)
 ggsave(paste0("eps/fdi.eps"),fdi_map,device="eps",width=10,height=6)
