@@ -1,7 +1,7 @@
 # if( !require( devtools ) ) install.packages("devtools")
 # devtools::install_github('davidgohel/gdtools')
 
-list.of.packages <- c("sp","rgdal","leaflet","data.table","ggplot2","scales","svglite")
+list.of.packages <- c("sp","rgdal","leaflet","data.table","ggplot2","scales","svglite","openxlsx")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=T)
@@ -39,6 +39,17 @@ donor = merge(donor,districts,by="district_id",all.x=T)
 donor = subset(donor,year==2016 & budget_type=="budget")
 donor = donor[keep]
 setnames(donor,"value","donor")
+
+wb <- createWorkbook()
+addWorksheet(wb,"FDI")
+writeData(wb,sheet="FDI",dist.dat,colNames=TRUE,rowNames=FALSE)
+addWorksheet(wb,"Pov")
+writeData(wb,sheet="Pov",pov,colNames=TRUE,rowNames=FALSE)
+addWorksheet(wb,"Local")
+writeData(wb,sheet="Local",local,colNames=TRUE,rowNames=FALSE)
+addWorksheet(wb,"Donor")
+writeData(wb,sheet="Donor",donor,colNames=TRUE,rowNames=FALSE)
+saveWorkbook(wb, "data/uganda_data.xlsx", overwrite = TRUE)
 
 ug.f = fortify(ug,region="name")
 setnames(ug.f,"id","name")
