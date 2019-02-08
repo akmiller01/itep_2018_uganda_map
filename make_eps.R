@@ -30,13 +30,13 @@ setnames(pov,"value","pov")
 
 local = dbReadTable(con, c("spotlight_on_uganda_2017","uganda_local_percent"))
 local = merge(local,districts,by="district_id",all.x=T)
-local = subset(local,year==2017 & budget_type=="actual")
+local = subset(local,year==2016 & budget_type=="actual")
 local = local[keep]
 setnames(local,"value","local")
 
 donor = dbReadTable(con, c("spotlight_on_uganda_2017","uganda_donor_percent"))
 donor = merge(donor,districts,by="district_id",all.x=T)
-donor = subset(donor,year==2017 & budget_type=="actual")
+donor = subset(donor,year==2016 & budget_type=="actual")
 donor = donor[keep]
 setnames(donor,"value","donor")
 
